@@ -1,7 +1,9 @@
-﻿namespace AOC2020
+﻿using System.Collections.Generic;
+
+namespace AOC2020
 {
     interface DayOfDec
     {
-        void Run();
+        void Run(IEnumerable<string> lines);
     }
 }
