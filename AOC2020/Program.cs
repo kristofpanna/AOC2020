@@ -1,4 +1,4 @@
-﻿using AOC2020.dec01;
+﻿using AOC2020.dec02;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -14,7 +14,7 @@ namespace AOC2020
                 string path = args[0]; // @"./dec01/test01.txt"
                 IEnumerable<string> lines = File.ReadLines(path);
 
-                DayOfDec dayOfDec = new DayOfDec01();
+                DayOfDec dayOfDec = new DayOfDec02();
                 dayOfDec.Run(lines);
             }
             catch (Exception e)
