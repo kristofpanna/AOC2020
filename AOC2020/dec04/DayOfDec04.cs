@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace AOC2020.dec04
 {
@@ -17,6 +18,42 @@ namespace AOC2020.dec04
         }
 
         private bool Valid(IDictionary<string, string> passport)
+        {
+            return ContainsAllRequiredFields(passport) &&
+                   IsNumberBetween(passport["byr"], 1920, 2002) &&
+                   IsNumberBetween(passport["iyr"], 2010, 2020) &&
+                   IsNumberBetween(passport["eyr"], 2020, 2030) &&
+                   IsHeightValid(passport["hgt"]) &&
+                   IsRegexMatch(passport["hcl"], @"^#[\da-f]{6}$") &&
+                   new[] {"amb", "blu", "brn", "gry", "grn", "hzl", "oth"}.Contains(passport["ecl"]) &&
+                   IsRegexMatch(passport["pid"], @"^\d{9}$");
+        }
+
+        private bool IsRegexMatch(string field, string regex)
+        {
+            var r = new Regex(regex);
+            return r.IsMatch(field);
+        }
+
+        private bool IsHeightValid(string hgt)
+        {
+            var quantity = hgt[..^2];
+            var unit = hgt[^2..];
+
+            return unit == "cm" ? 
+                IsNumberBetween(quantity, 150, 193) : 
+                IsNumberBetween(quantity, 59, 76);
+        }
+
+        private bool IsNumberBetween(string numAsString, int min, int max)
+        {
+            if (!int.TryParse(numAsString, out var num))
+                return false;
+
+            return num <= max && num >= min;
+        }
+
+        private static bool ContainsAllRequiredFields(IDictionary<string, string> passport)
         {
             var requiredFields = new[] {"byr", "iyr", "eyr", "hgt", "hcl", "ecl", "pid"}; // ("cid" is optional)
             return !requiredFields.Except(passport.Keys).Any();
