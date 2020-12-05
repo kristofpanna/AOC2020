@@ -17,7 +17,7 @@ namespace AOC2020.dec04
             Console.ReadKey();
         }
 
-        private bool Valid(IDictionary<string, string> passport)
+        public static bool Valid(IDictionary<string, string> passport)
         {
             return ContainsAllRequiredFields(passport) &&
                    IsNumberBetween(passport["byr"], 1920, 2002) &&
@@ -29,13 +29,13 @@ namespace AOC2020.dec04
                    IsRegexMatch(passport["pid"], @"^\d{9}$");
         }
 
-        private bool IsRegexMatch(string field, string regex)
+        private static bool IsRegexMatch(string field, string regex)
         {
             var r = new Regex(regex);
             return r.IsMatch(field);
         }
 
-        private bool IsHeightValid(string hgt)
+        private static bool IsHeightValid(string hgt)
         {
             var quantity = hgt[..^2];
             var unit = hgt[^2..];
@@ -45,7 +45,7 @@ namespace AOC2020.dec04
                 IsNumberBetween(quantity, 59, 76);
         }
 
-        private bool IsNumberBetween(string numAsString, int min, int max)
+        private static bool IsNumberBetween(string numAsString, int min, int max)
         {
             if (!int.TryParse(numAsString, out var num))
                 return false;
@@ -59,7 +59,7 @@ namespace AOC2020.dec04
             return !requiredFields.Except(passport.Keys).Any();
         }
 
-        private IEnumerable<IDictionary<string, string>> GetPassports(IEnumerable<string> lines)
+        private static IEnumerable<IDictionary<string, string>> GetPassports(IEnumerable<string> lines)
         {
             var passports = new List<IDictionary<string, string>>();
             var passport = new Dictionary<string, string>();
@@ -79,7 +79,7 @@ namespace AOC2020.dec04
             return passports;
         }
 
-        private static void AddFields(IDictionary<string, string> passport, string line)
+        public static void AddFields(IDictionary<string, string> passport, string line)
         {
             var fields = line.Split(' ');
             foreach (var field in fields)
