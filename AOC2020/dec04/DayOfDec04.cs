@@ -70,7 +70,10 @@ namespace AOC2020.dec04
                     passports.Add(passport);
                     passport = new Dictionary<string, string>();
                 }
-                AddFields(passport, line);
+                else
+                {
+                    AddFields(passport, line);
+                }
             }
 
             return passports;
@@ -78,7 +81,7 @@ namespace AOC2020.dec04
 
         private static void AddFields(IDictionary<string, string> passport, string line)
         {
-            var fields = line.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+            var fields = line.Split(' ');
             foreach (var field in fields)
             {
                 AddField(passport, field);
