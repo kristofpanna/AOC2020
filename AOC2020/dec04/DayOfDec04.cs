@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 
 namespace AOC2020.dec04
 {
@@ -19,20 +18,14 @@ namespace AOC2020.dec04
 
         public static bool Valid(IDictionary<string, string> passport)
         {
-            return ContainsAllRequiredFields(passport) &&
-                   IsNumberBetween(passport["byr"], 1920, 2002) &&
-                   IsNumberBetween(passport["iyr"], 2010, 2020) &&
-                   IsNumberBetween(passport["eyr"], 2020, 2030) &&
-                   IsHeightValid(passport["hgt"]) &&
-                   IsRegexMatch(passport["hcl"], @"^#[\da-f]{6}$") &&
-                   new[] {"amb", "blu", "brn", "gry", "grn", "hzl", "oth"}.Contains(passport["ecl"]) &&
-                   IsRegexMatch(passport["pid"], @"^\d{9}$");
-        }
-
-        private static bool IsRegexMatch(string field, string regex)
-        {
-            var r = new Regex(regex);
-            return r.IsMatch(field);
+            return ContainsAllRequiredFields(passport) 
+                   && Util.IsNumberBetween(passport["byr"], 1920, 2002) 
+                   && Util.IsNumberBetween(passport["iyr"], 2010, 2020) 
+                   && Util.IsNumberBetween(passport["eyr"], 2020, 2030) 
+                   && IsHeightValid(passport["hgt"]) 
+                   && Util.IsRegexMatch(passport["hcl"], @"^#[\da-f]{6}$") 
+                   && new[] {"amb", "blu", "brn", "gry", "grn", "hzl", "oth"}.Contains(passport["ecl"]) 
+                   && Util.IsRegexMatch(passport["pid"], @"^\d{9}$");
         }
 
         private static bool IsHeightValid(string hgt)
@@ -40,17 +33,7 @@ namespace AOC2020.dec04
             var quantity = hgt[..^2];
             var unit = hgt[^2..];
 
-            return unit == "cm" ? 
-                IsNumberBetween(quantity, 150, 193) : 
-                IsNumberBetween(quantity, 59, 76);
-        }
-
-        private static bool IsNumberBetween(string numAsString, int min, int max)
-        {
-            if (!int.TryParse(numAsString, out var num))
-                return false;
-
-            return num <= max && num >= min;
+            return unit == "cm" ? Util.IsNumberBetween(quantity, 150, 193) : Util.IsNumberBetween(quantity, 59, 76);
         }
 
         private static bool ContainsAllRequiredFields(IDictionary<string, string> passport)
