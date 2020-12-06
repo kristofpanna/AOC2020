@@ -8,10 +8,17 @@ namespace AOC2020.dec05
     {
         public void Run(IEnumerable<string> lines)
         {
-            var res = lines
+            var orderedIds = lines
                 .Select(l => new BoardingPass(l))
                 .Select(b => b.Id)
-                .Max();
+                //.Max();
+                .OrderBy(x => x)
+                .ToList();
+
+            var res = orderedIds
+                .Skip(1)
+                .Zip(orderedIds, (id, prev) => id - prev > 1 ? id - 1 : -1)
+                .First(x => x > 0);
 
             Console.WriteLine(res);
             Console.ReadKey();
@@ -22,7 +29,7 @@ namespace AOC2020.dec05
             public int Row { get; set; }
             public int Col { get; set; }
 
-            public int Id => Row * 8 + Col;
+            public int Id => Row * 8 + Col; // 0-1023
 
             public BoardingPass(string bp) 
                 : this(ParseWeirdBinary(bp[..^3], 'F', 'B'), ParseWeirdBinary(bp[^3..], 'L', 'R'))

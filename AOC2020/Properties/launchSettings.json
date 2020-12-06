@@ -2,7 +2,7 @@
   "profiles": {
     "AOC2020": {
       "commandName": "Project",
-      "commandLineArgs": "./dec05/test05.txt"
+      "commandLineArgs": "./dec06/test06.txt"
     }
   }
 }
