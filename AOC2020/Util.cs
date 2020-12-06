@@ -9,10 +9,10 @@ namespace AOC2020
 {
     public class Util
     {
-        public static bool IsRegexMatch(string text, string regex)
+        public static bool IsRegexMatch(string field, string regex)
         {
             var r = new Regex(regex);
-            return r.IsMatch(text);
+            return r.IsMatch(field);
         }
 
         public static bool IsNumberBetween(string numAsString, int min, int max)
