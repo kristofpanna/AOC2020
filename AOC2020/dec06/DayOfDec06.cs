@@ -16,14 +16,14 @@ namespace AOC2020.dec06
 
         public static int Part1(IEnumerable<string> lines)
         {
-            return GetGroupsAnswers(lines, () => new HashSet<char>(), AddStuff)
+            return Util.GetGroups<ISet<char>>(lines, () => new HashSet<char>(), AddStuff)
                 .Select(s => s.Count)
                 .Sum(); // 6542
         }
 
         public static int Part2(IEnumerable<string> lines)
         {
-            return GetGroupsAnswers(lines, () => new HashSet<char>(AllLetters()), CommonPart)
+            return Util.GetGroups<ISet<char>>(lines, () => new HashSet<char>(AllLetters()), CommonPart)
                 .Select(s => s.Count)
                 .Sum(); // 3299
         }
@@ -31,27 +31,6 @@ namespace AOC2020.dec06
         private static IEnumerable<char> AllLetters()
         {
             return Enumerable.Range('a', 'z' - 'a' + 1).Select(c => (char)c);
-        }
-
-
-        private static IEnumerable<ISet<char>> GetGroupsAnswers(IEnumerable<string> lines, Func<ISet<char>> init, Action<ISet<char>, string> updateGroup)
-        {
-            var groups = new List<ISet<char>>();
-            var group = init();
-            foreach (var line in lines)
-            {
-                if (line == "")
-                {
-                    groups.Add(group);
-                    group = init();
-                }
-                else
-                {
-                    updateGroup(group, line);
-                }
-            }
-
-            return groups;
         }
 
         private static void AddStuff(ISet<char> group, string line)

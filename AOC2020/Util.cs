@@ -3,6 +3,7 @@
 // </copyright>
 
 using System;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
 namespace AOC2020
@@ -21,6 +22,26 @@ namespace AOC2020
                 return false;
 
             return num <= max && num >= min;
+        }
+
+        public static IEnumerable<T> GetGroups<T>(IEnumerable<string> lines, Func<T> init, Action<T, string> updateGroup)
+        {
+            var groups = new List<T>();
+            var group = init();
+            foreach (var line in lines)
+            {
+                if (line == "")
+                {
+                    groups.Add(group);
+                    group = init();
+                }
+                else
+                {
+                    updateGroup(group, line);
+                }
+            }
+
+            return groups;
         }
     }
 }
