@@ -8,9 +8,8 @@ namespace AOC2020.dec04
     {
         public void Run(IEnumerable<string> lines)
         {
-            //Console.WriteLine(lines.Count());
             var passports = GetPassports(lines);
-            var result = passports.Count(Valid);
+            var result = passports.Count(Valid); // 158
 
             Console.WriteLine(result);
             Console.ReadKey();
@@ -44,22 +43,7 @@ namespace AOC2020.dec04
 
         private static IEnumerable<IDictionary<string, string>> GetPassports(IEnumerable<string> lines)
         {
-            var passports = new List<IDictionary<string, string>>();
-            var passport = new Dictionary<string, string>();
-            foreach (var line in lines)
-            {
-                if (line == "")
-                {
-                    passports.Add(passport);
-                    passport = new Dictionary<string, string>();
-                }
-                else
-                {
-                    AddFields(passport, line);
-                }
-            }
-
-            return passports;
+            return Util.GetGroups(lines, () => new Dictionary<string, string>(), AddFields);
         }
 
         public static void AddFields(IDictionary<string, string> passport, string line)
