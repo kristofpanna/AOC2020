@@ -18,7 +18,7 @@ namespace AOC2020
 
         public static bool IsNumberBetween(string numAsString, int min, int max)
         {
-            if (!Int32.TryParse(numAsString, out var num))
+            if (!int.TryParse(numAsString, out var num))
                 return false;
 
             return num <= max && num >= min;
