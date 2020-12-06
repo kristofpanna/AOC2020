@@ -24,7 +24,7 @@ namespace AOC2020
             return num <= max && num >= min;
         }
 
-        public static IEnumerable<T> GetGroups<T>(IEnumerable<string> lines, Func<T> init, Action<T, string> updateGroup)
+        public static IEnumerable<T> GetGroups<T>(IEnumerable<string> lines, Func<T> init, Action<T, string> updateGroup) where T : class
         {
             var groups = new List<T>();
             var group = init();
