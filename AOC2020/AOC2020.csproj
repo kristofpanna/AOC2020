@@ -30,6 +30,9 @@
     <None Update="dec07\example07.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="dec07\example07_2.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="dec07\test07.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

@@ -12,6 +12,7 @@ namespace AOC2020Tests.dec07
     {
         private const string PersonalInput = @"./dec07/test07.txt";
         private const string ExampleInput = @"./dec07/example07.txt";
+        private const string ExampleInput2 = @"./dec07/example07_2.txt";
 
         [TestMethod()]
         public void TestPart1_ExampleInput()
@@ -34,13 +35,33 @@ namespace AOC2020Tests.dec07
         }
 
         [TestMethod()]
+        public void TestPart2_ExampleInput()
+        {
+            IEnumerable<string> lines = File.ReadLines(ExampleInput);
+
+            var res = new DayOfDec07().Part2(lines);
+
+            Assert.AreEqual(32, res);
+        }
+
+        [TestMethod()]
+        public void TestPart2_ExampleInput2()
+        {
+            IEnumerable<string> lines = File.ReadLines(ExampleInput2);
+
+            var res = new DayOfDec07().Part2(lines);
+
+            Assert.AreEqual(126, res);
+        }
+
+        [TestMethod()]
         public void TestPart2()
         {
             IEnumerable<string> lines = File.ReadLines(PersonalInput);
 
             var res = new DayOfDec07().Part2(lines);
 
-            Assert.AreEqual(-1, res);
+            Assert.AreEqual(14177, res);
         }
 
         [DataTestMethod()]

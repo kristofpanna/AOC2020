@@ -25,7 +25,8 @@ namespace AOC2020.dec07
 
         public int Part2(IEnumerable<string> lines)
         {
-            return 0;
+            ProcessRules(lines);
+            return CountContent(GetOrCreateBag("shiny gold"));
         }
 
         public Dictionary<string, Bag> BagByColor { get; set; } = new Dictionary<string, Bag>();
@@ -90,6 +91,11 @@ namespace AOC2020.dec07
             }
         }
 
+        /// <summary>
+        /// Bags that can contain the given bag.
+        /// </summary>
+        /// <param name="color">color of the bag</param>
+        /// <returns>set of bags (including the given one)</returns>
         private ISet<Bag> ReachableBagsFrom(string color)
         {
             var todo = new HashSet<Bag> { GetOrCreateBag(color) };
@@ -106,6 +112,17 @@ namespace AOC2020.dec07
 
             return done;
         }
+
+        /// <summary>
+        /// Count how many bags are contained in total in the given bag (including the given one).
+        /// </summary>
+        private static int CountContent(Bag bag)
+        {
+            var count = bag.Content
+                .Select(t => t.Item1 * (CountContent(t.Item2) + 1))
+                .Sum();
+
+            return count;
+        }
     }
 }
-    
