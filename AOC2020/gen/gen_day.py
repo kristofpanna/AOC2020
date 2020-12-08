@@ -1,7 +1,7 @@
 ﻿import os
 
 print("hi")
-DAY = "07"      ### TODO arg, 2 digits
+DAY = "08"      ### TODO arg, 2 digits
 
 # generate class and input file into project
 dir_path = "../dec{day}".format(day=DAY)
@@ -10,7 +10,11 @@ os.mkdir(dir_path)
 input_name = "test{day}.txt".format(day=DAY)
 with open(os.path.join(dir_path, input_name), "w") as out:
     pass
-   
+    
+input_ex_name = "example{day}.txt".format(day=DAY)
+with open(os.path.join(dir_path, input_ex_name), "w") as out:
+    pass
+    
 ### TODO modify \AOC2020\AOC2020.csproj   -> copy always
 
 ### TODO modify \AOC2020\Properties\launchSettings.json   ->       "commandLineArgs": "./dec06/test06.txt"
@@ -67,6 +71,17 @@ namespace AOC2020Tests.dec{day}
     public class DayOfDec{day}Tests
     {{
         private const string PersonalInput = @"./dec{day}/test{day}.txt";
+        private const string ExampleInput = @"./dec{day}/example{day}.txt";
+
+        [TestMethod()]
+        public void TestPart1_ExampleInput()
+        {{
+            IEnumerable<string> lines = File.ReadLines(ExampleInput);
+
+            var res = DayOfDec{day}.Part1(lines);
+
+            Assert.AreEqual(-1, res);
+        }}
 
         [TestMethod()]
         public void TestPart1()
@@ -74,6 +89,16 @@ namespace AOC2020Tests.dec{day}
             IEnumerable<string> lines = File.ReadLines(PersonalInput);
 
             var res = DayOfDec{day}.Part1(lines);
+
+            Assert.AreEqual(-1, res);
+        }}
+        
+        [TestMethod()]
+        public void TestPart2_ExampleInput()
+        {{
+            IEnumerable<string> lines = File.ReadLines(ExampleInput);
+
+            var res = DayOfDec{day}.Part2(lines);
 
             Assert.AreEqual(-1, res);
         }}
