@@ -114,7 +114,7 @@ namespace AOC2020.dec07
         }
 
         /// <summary>
-        /// Count how many bags are contained in total in the given bag (including the given one).
+        /// Count how many bags are contained in total in the given bag (not counting the given one).
         /// </summary>
         private static int CountContent(Bag bag)
         {
