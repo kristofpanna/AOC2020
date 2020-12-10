@@ -1,7 +1,8 @@
 ﻿import os
+import sys
 
 print("hi")
-DAY = "08"      ### TODO arg, 2 digits
+DAY = sys.argv[1] if len(sys.argv)>1 else "00"      ### TODO arg, 2 digits
 
 # generate class and input file into project
 dir_path = "../dec{day}".format(day=DAY)
