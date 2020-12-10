@@ -39,7 +39,7 @@ namespace AOC2020Tests.dec08
 
             var res = DayOfDec08.Part2(lines);
 
-            Assert.AreEqual(-1, res);
+            Assert.AreEqual(8, res);
         }
 
         [TestMethod()]
@@ -49,7 +49,7 @@ namespace AOC2020Tests.dec08
 
             var res = DayOfDec08.Part2(lines);
 
-            Assert.AreEqual(-1, res);
+            Assert.AreEqual(1532, res);
         }
     }
 }

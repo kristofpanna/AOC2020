@@ -6,9 +6,9 @@ namespace AOC2020.dec08
 {
     class Machine
     {
-        private List<Instruction> Instructions { get; }
+        public List<Instruction> Instructions { get; }
 
-        private int Accumulator { get; set; } = 0;
+        public int Accumulator { get; set; } = 0;
 
 
         public Machine(IEnumerable<string> lines)
@@ -16,18 +16,32 @@ namespace AOC2020.dec08
             Instructions = lines.Select(line => new Instruction(line)).ToList();
         }
 
-        public int Execute()
+        public Machine(Machine other)
+        {
+            Instructions = other.Instructions.Select(ins => new Instruction(ins)).ToList();
+        }
+
+        // retuns: is infinite loop
+        public bool ExecuteUntilLoop()
         {
             int next = 0;
             Instruction act = Instructions[next];
             while (!act.Visited)
             {
                 act.Visited = true;
-                next += act.Operation(this, act.Argument);
+
+                var operation = OperationsByName[act.OperationName];
+                next += operation(act.Argument);
+
+                if (next == Instructions.Count)
+                    return false;
+                //if (next > Instructions.Count || next < 0)
+                //    return true; // (not loop, but not immediately after the last -> bad)
+
                 act = Instructions[next];
             }
 
-            return Accumulator;
+            return true;
         }
 
 
@@ -42,21 +56,41 @@ namespace AOC2020.dec08
 
         private int Nop(int arg) => 1;
 
-
-        private class Instruction
+        private Dictionary<string, Func<int, int>> OperationsByName => new Dictionary<string, Func<int, int>>
         {
-            public Func<Machine, int, int> Operation { get; set; } // returns next operation's offset
+            ["acc"] = Acc,
+            ["jmp"] = Jmp,
+            ["nop"] = Nop
+        };
+
+        public class Instruction
+        {
+            public string OperationName { get; set; }
+
+            //public Func<Machine, int, int> Operation { get; set; } // returns next operation's offset
             public int Argument { get; set; }
             public bool Visited { get; set; } = false;
+
+            public void ChangeOperation()
+            {
+                OperationName = OperationName == "jmp" ? "nop" : "jmp";
+            }
 
             public Instruction(string line)
             {
                 string[] parts = line.Split(' ', StringSplitOptions.RemoveEmptyEntries);
 
-                Operation = OperationsByName[parts[0]];
+                OperationName = parts[0];
                 Argument = int.Parse(parts[1]);
             }
 
+            public Instruction(Instruction other)
+            {
+                OperationName = other.OperationName;
+                Argument = other.Argument;
+            }
+
+            /* // <3
             private static Dictionary<string, Func<Machine, int, int>> OperationsByName => new Dictionary<string, Func<Machine, int, int>>
             {
                 ["acc"] = (Machine m, int arg) => m.Acc(arg),
@@ -65,6 +99,7 @@ namespace AOC2020.dec08
                 // Java: Machine::acc  <->  (int arg) => this.jmp(arg),  // this::jmp
                 // c++: std::mem_fn(&Machine::acc)
             };
+            */
         }
     }
 }
