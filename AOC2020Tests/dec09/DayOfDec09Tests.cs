@@ -55,7 +55,7 @@ namespace AOC2020Tests.dec09
 
             var res = day.Part2(lines);
 
-            Assert.AreEqual(-1, res);
+            Assert.AreEqual(238243506, res);
         }
     }
 }

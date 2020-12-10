@@ -17,13 +17,18 @@ namespace AOC2020.dec09
             Console.ReadKey();
         }
 
-        /// <summary>
-        /// find the first number in the list (after the preamble) which is not the sum of two of the 25 numbers before it
-        /// </summary>
         public long Part1(IEnumerable<string> lines)
         {
             var numbers = lines.Select(long.Parse).ToList();
 
+            return FindFirstNotSum(numbers);
+        }
+
+        /// <summary>
+        /// find the first number in the list (after the preamble) which is not the sum of two of the 25 numbers before it
+        /// </summary>
+        private long FindFirstNotSum(List<long> numbers)
+        {
             var sortedWindow = new SortedSet<long>(numbers.GetRange(0, PreambleLength));
             for (var i = PreambleLength; i < numbers.Count; i++)
             {
@@ -39,10 +44,33 @@ namespace AOC2020.dec09
 
             return 0;
         }
-        
-        public int Part2(IEnumerable<string> lines)
+
+        public long Part2(IEnumerable<string> lines)
         {
-            return 0;
+            var numbers = lines.Select(long.Parse).ToList();
+            long targetSum = FindFirstNotSum(numbers); // 1492208709
+
+            // find a contiguous set of at least two numbers in your list which sum to targetSum
+            int smallIndex = 0;
+            int bigIndex = 0;
+            long sum = 0;
+            while (sum != targetSum)
+            {
+                if (sum < targetSum)
+                {
+                    sum += numbers[bigIndex];
+                    bigIndex++;
+                }
+                else
+                {
+                    sum -= numbers[smallIndex];
+                    smallIndex++;
+                }
+            }
+
+            // add together the smallest and largest number in this contiguous range
+            var range = numbers.GetRange(smallIndex, bigIndex - smallIndex);
+            return range.Min() + range.Max(); // TODO in one round
         }
     }
 }
