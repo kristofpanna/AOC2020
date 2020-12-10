@@ -10,7 +10,7 @@ namespace AOC2020.dec01
         {
             var sortedNumbers = lines.Select(int.Parse).OrderBy(x => x).ToList();
 
-            TryFindTwoWithSum(sortedNumbers, 2020, out var a, out var b);
+            Util.TryFindTwoWithSum(sortedNumbers, 2020, out var a, out var b);
             Console.WriteLine($"2 numbers: {a} {b}");
             Console.WriteLine($"multiplied: {a * b}");
 
@@ -22,42 +22,13 @@ namespace AOC2020.dec01
             Console.ReadKey();
         }
 
-        private bool TryFindTwoWithSum(IList<int> sortedNumbers, int targetSum, out int a, out int b)
-        {
-            // assume: numbers: not null, not empty, SORTED
-            int small = 0;
-            int big = sortedNumbers.Count - 1;
-            while (small < big)
-            {
-                var sum = sortedNumbers[small] + sortedNumbers[big];
-                if (sum == targetSum)
-                {
-                    a = sortedNumbers[small];
-                    b = sortedNumbers[big];
-                    return true;
-                }
-                if (sum > targetSum)
-                {
-                    big--;
-                }
-                else
-                {
-                    small++;
-                }
-            }
-
-            a = 0;
-            b = 0;
-            return false;
-        }
-
         private bool TryFindThreeWithSum(IList<int> sortedNumbers, int targetSum, out int x, out int y, out int z)
         {
             // assume: numbers: not null, not empty, SORTED
             for (int i = 0; i < sortedNumbers.Count; i++)
             {
                 x = sortedNumbers[i];
-                bool isFound = TryFindTwoWithSum(sortedNumbers.Skip(i).ToList(), targetSum - x, out y, out z);
+                bool isFound = Util.TryFindTwoWithSum(sortedNumbers.Skip(i).ToList(), targetSum - x, out y, out z);
                 if (isFound)
                 {
                     return true;
