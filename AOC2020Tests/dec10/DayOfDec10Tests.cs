@@ -64,6 +64,7 @@ namespace AOC2020Tests.dec10
         }
 
         [TestMethod()]
+        [Ignore]
         public void TestPart2()
         {
             IEnumerable<string> lines = File.ReadLines(PersonalInput);
