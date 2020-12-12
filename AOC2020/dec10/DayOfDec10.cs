@@ -17,9 +17,9 @@ namespace AOC2020.dec10
 
         public static int Part1(IEnumerable<string> lines)
         {
-            var sorted = lines.Select(int.Parse).OrderBy(x => x).ToList();
+            var sorted = GetSortedJoltages(lines);
 
-            var counts = sorted
+                var counts = sorted
                 .Zip(sorted.Skip(1), (a, b) => b - a)
                 .GroupBy(x => x)
                 .Where(g => g.Key == 1 || g.Key == 3)
@@ -27,12 +27,23 @@ namespace AOC2020.dec10
                 .Select(g => g.Count())
                 .ToArray();
 
-            return (counts[0] + 1) * (counts[1] + 1); // +1 to 3s for (my own - the last), +1 to 1s why???
+            return counts[0] * (counts[1] + 1); // +1 to 3s for (my own - the biggest)
         }
 
-        public static int Part2(IEnumerable<string> lines)
+        private static List<int> GetSortedJoltages(IEnumerable<string> lines)
         {
-            return 0;
+            var sorted = lines
+                .Select(int.Parse)
+                .OrderBy(x => x)
+                .Prepend(0) // the charging outlet: 0
+                .ToList();
+            return sorted;
+        }
+
+        public static long Part2(IEnumerable<string> lines)
+        {
+            var input = lines.ToList();
+            return input.Count;
         }
     }
 }
