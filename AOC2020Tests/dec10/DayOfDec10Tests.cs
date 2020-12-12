@@ -44,13 +44,23 @@ namespace AOC2020Tests.dec10
         }
 
         [TestMethod()]
+        public void TestPart2_ExampleInput()
+        {
+            IEnumerable<string> lines = File.ReadLines(ExampleInput);
+
+            var res = DayOfDec10.Part2(lines);
+
+            Assert.AreEqual(19208, res);
+        }
+
+        [TestMethod()]
         public void TestPart2_ExampleInput2()
         {
             IEnumerable<string> lines = File.ReadLines(ExampleInput2);
 
             var res = DayOfDec10.Part2(lines);
 
-            Assert.AreEqual(19208, res);
+            Assert.AreEqual(8, res);
         }
 
         [TestMethod()]
