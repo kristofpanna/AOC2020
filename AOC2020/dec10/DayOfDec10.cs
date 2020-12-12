@@ -52,11 +52,18 @@ namespace AOC2020.dec10
             private readonly IList<int> _sorted; // -> CountDistinctSolutions cannot be called with a completely different list
             private readonly Dictionary<int, long> _cache = new Dictionary<int, long>();
 
+            /// <summary>
+            /// Create a <see cref="SolutionsCounter"/> for the given adapters.
+            /// </summary>
+            /// <param name="sorted">adapter joltages, SORTED</param>
             public SolutionsCounter(IList<int> sorted)
             {
                 _sorted = sorted;
             }
 
+            /// <summary>
+            /// Count possible adapter choices.
+            /// </summary>
             public long Count()
             {
                 return CountDistinctSolutions(0, _sorted); // charging outlet: 0; last fix: max (= my own - 3)
