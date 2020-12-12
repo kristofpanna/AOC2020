@@ -64,14 +64,14 @@ namespace AOC2020Tests.dec10
         }
 
         [TestMethod()]
-        [Ignore]
+        //[Ignore]
         public void TestPart2()
         {
             IEnumerable<string> lines = File.ReadLines(PersonalInput);
 
             var res = DayOfDec10.Part2(lines);
 
-            Assert.AreEqual(-1, res);
+            Assert.AreEqual(74049191673856, res);
         }
     }
 }

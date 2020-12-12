@@ -43,31 +43,50 @@ namespace AOC2020.dec10
         public static long Part2(IEnumerable<string> lines)
         {
             var sorted = GetSortedJoltages(lines);
-
-            return CountDistinctSolutions(0, sorted); // charging outlet: 0; last fix: max (= my own - 3)
+            var counter = new SolutionsCounter(sorted);
+            return counter.Count(); 
         }
 
-        /// <summary>
-        /// Count possible adapter choices, if the last of <see cref="sorted"/> is chosen.
-        /// </summary>
-        /// <param name="start">starting value before the first adapter</param>
-        /// <param name="sorted">adapter joltages, SORTED</param>
-        /// <returns>number of distinct ways from <see cref="start"/> to the last of <see cref="sorted"/></returns>
-        private static long CountDistinctSolutions(int start, IEnumerable<int> sorted)
+        public class SolutionsCounter
         {
-            if (!sorted.Any())
-                return 0;
+            private readonly IList<int> _sorted; // -> CountDistinctSolutions cannot be called with a completely different list
+            private readonly Dictionary<int, long> _cache = new Dictionary<int, long>();
 
-            var first = sorted.First();
-            var rest = sorted.Skip(1);
+            public SolutionsCounter(IList<int> sorted)
+            {
+                _sorted = sorted;
+            }
 
-            if (first > start + 3) // not even the first is approachable
-                return 0;
+            public long Count()
+            {
+                return CountDistinctSolutions(0, _sorted); // charging outlet: 0; last fix: max (= my own - 3)
+            }
 
-            if (!rest.Any())
-                return 1;
-            
-            return CountDistinctSolutions(first, rest) + CountDistinctSolutions(start, rest); // first is either in the solution or not
+            /// <summary>
+            /// Count possible adapter choices, if the last of <see cref="sorted"/> is chosen.
+            /// </summary>
+            /// <param name="start">starting value before the first adapter</param>
+            /// <param name="sorted">adapter joltages, SORTED</param>
+            /// <returns>number of distinct ways from <see cref="start"/> to the last of <see cref="sorted"/></returns>
+            private long CountDistinctSolutions(int start, IList<int> sorted)
+            {
+                if (_cache.ContainsKey(start))
+                    return _cache[start];
+
+                var first = sorted[0];
+                var rest = sorted.Skip(1).ToList();
+
+                if (first > start + 3) // not even the first is approachable
+                    return 0;
+
+                if (rest.Count == 0) // first is the last
+                    return 1;
+
+                var count = CountDistinctSolutions(first, rest) + CountDistinctSolutions(start, rest); // first is either in the solution or not
+                _cache[start] = count;
+
+                return count;
+            }
         }
     }
 }
