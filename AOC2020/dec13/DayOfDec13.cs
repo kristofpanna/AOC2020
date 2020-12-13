@@ -52,9 +52,51 @@ namespace AOC2020.dec13
             return busId - (earliest % busId);
         }
 
-        public static int Part2(IEnumerable<string> lines)
+        public static long Part2(IEnumerable<string> lines) // TODO BigInt?
         {
-            return 0;
+            // get linear congruence system
+            // all numbers are prime in the inputs -> mods are primes
+            List<(long rem, long mod)> congruences = GetCongruences(lines.Skip(1).First());
+
+            long solution = 0;
+            long mod = 1;
+            foreach (var congruence in congruences)
+            {
+                solution = SolveNext(solution, mod, congruence);
+                mod *= congruence.mod;
+            }
+
+            return solution;
+        }
+
+        private static long SolveNext(long solution, long mod, (long rem, long mod) congruence)
+        {
+            return ArithmeticProgression(solution, mod)
+                .First(x => IsSolutionForCongruence(x, congruence));
+        }
+
+        private static IEnumerable<long> ArithmeticProgression(long start, long difference) // infinite
+        {
+            while (true)
+            {
+                yield return start;
+                start += difference;
+            }
+        }
+
+        private static bool IsSolutionForCongruence(long solution, (long rem, long mod) congruence)
+        {
+            return solution % congruence.mod == congruence.rem;
+        }
+
+        private static List<(long rem, long mod)> GetCongruences(string line)
+        {
+            return line.Split(',')
+                .Select((x, i) => (x, i))
+                .Where(t => t.x != "x")
+                .Select(t => (rem: (long.Parse(t.x) - (long)t.i) % long.Parse(t.x), mod: long.Parse(t.x)))
+                .OrderByDescending(t => t.mod)
+                .ToList();
         }
     }
 }
