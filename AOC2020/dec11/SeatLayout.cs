@@ -9,16 +9,28 @@ namespace AOC2020.dec11
         private const char Empty = 'L';
         private const char Occupied = '#';
 
-        private readonly List<List<char>> _grid;
-
-        public SeatLayout(IEnumerable<string> lines)
+        public enum NeighborMode 
         {
-            _grid = lines.Select(line => line.ToList()).ToList();
+            Around,
+            FirstToSee
         }
 
-        private SeatLayout()
+        private readonly List<List<char>> _grid;
+        private readonly int _occupiedToEmptyMin;
+        private readonly NeighborMode _neighborMode;
+
+        public SeatLayout(IEnumerable<string> lines, int occupiedToEmptyMin = 4, NeighborMode neighborMode = NeighborMode.Around)
         {
-            _grid = new List<List<char>>();
+            _grid = lines.Select(line => line.ToList()).ToList();
+            _occupiedToEmptyMin = occupiedToEmptyMin;
+            _neighborMode = neighborMode;
+        }
+
+        private SeatLayout(SeatLayout otherLayout)
+        {
+            _grid = new List<List<char>>(); // !!! :/
+            _occupiedToEmptyMin = otherLayout._occupiedToEmptyMin;
+            _neighborMode = otherLayout._neighborMode;
         }
 
         /// <summary>
@@ -29,7 +41,7 @@ namespace AOC2020.dec11
         public bool GetNextState(out SeatLayout nextLayout)
         {
             bool isChanged = false;
-            nextLayout = new SeatLayout();
+            nextLayout = new SeatLayout(this);
             for (var i = 0; i < _grid.Count; i++)
             {
                 var newRow = new List<char>();
@@ -45,15 +57,16 @@ namespace AOC2020.dec11
 
         private char NewSeat(int i, int j, ref bool isChanged)
         {
+            var place = (i, j);
             var currentSeat = _grid[i][j];
             var newSeat = currentSeat;
             switch (currentSeat)
             {
-                case Empty when CountOccupiedNeighbors(i, j) == 0:
+                case Empty when CountOccupiedNeighbors(place) == 0:
                     newSeat = Occupied;
                     isChanged = true;
                     break;
-                case Occupied when CountOccupiedNeighbors(i, j) >= 4:
+                case Occupied when CountOccupiedNeighbors(place) >= _occupiedToEmptyMin:
                     newSeat = Empty;
                     isChanged = true;
                     break;
@@ -62,29 +75,64 @@ namespace AOC2020.dec11
             return newSeat;
         }
 
-        private int CountOccupiedNeighbors(int row, int col)
+        private int CountOccupiedNeighbors((int, int) place)
         {
-            return GetNeighbors(row, col).Count(n => n == Occupied);
+            return GetNeighbors(place).Count(n => n == Occupied);
         }
 
-        private IEnumerable<char> GetNeighbors(int row, int col)
+        private IEnumerable<char> GetNeighbors((int, int) place)
         {
-            var coords =
+            return _neighborMode == NeighborMode.Around 
+                ? GetNeighborsAround(place) 
+                : GetNeighborsFirstToSee(place);
+        }
+
+        private IEnumerable<char> GetNeighborsAround((int, int) place)
+        {
+            var seats = Directions()
+                .Select(dir => AddDirectionToPlace(place, dir))
+                .Where(IsValidPlace)
+                .Select(place => _grid[place.row][place.col]);
+
+            return seats;
+        }
+        private static IEnumerable<(int x, int y)> Directions()
+        {
+            return
                 from x in new[] { -1, 0, 1 }
                 from y in new[] { -1, 0, 1 }
                 where (x, y) != (0, 0)
-                select (r: row + x, c: col + y);
+                select (x, y);
+        }
 
-            var seats = coords
-                .Where(c => IsValidRowIndex(c.r) && IsValidColIndex(c.c))
-                .Select(c => _grid[c.r][c.c]);
+        private static (int row, int col) AddDirectionToPlace((int row, int col) place, (int x, int y) direction)
+        {
+            return (place.row + direction.x, place.col + direction.y);
+        }
 
-            return seats;
+        private bool IsValidPlace((int row, int col) coords)
+        {
+            return IsValidRowIndex(coords.row) && IsValidColIndex(coords.col);
         }
 
         private bool IsValidRowIndex(int row) => row >= 0 && row < _grid.Count;
 
         private bool IsValidColIndex(int col) => col >= 0 && col < _grid[0].Count;
+
+        private IEnumerable<char> GetNeighborsFirstToSee((int, int) place)
+        {
+            return Directions().Select(dir => GetFirstSeatInDirection(place, dir));
+        }
+
+        private char GetFirstSeatInDirection((int, int) place, (int, int) direction)
+        {
+            var nextPlace = AddDirectionToPlace(place, direction);
+            if (!IsValidPlace(nextPlace)) 
+                return '_';
+
+            var nextSeat = _grid[nextPlace.row][nextPlace.col];
+            return nextSeat == Floor ? GetFirstSeatInDirection(nextPlace, direction) : nextSeat;
+        }
 
         public int CountAllOccupied()
         {
