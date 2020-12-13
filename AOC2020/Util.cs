@@ -126,5 +126,10 @@ namespace AOC2020
             b = 0;
             return false;
         }
+
+        public static (int x, int y) AddCoords((int x, int y) coords1, (int x, int y) coords2)
+        {
+            return (coords1.x + coords2.x, coords1.y + coords2.y);
+        }
     }
 }
